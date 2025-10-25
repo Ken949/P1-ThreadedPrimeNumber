@@ -5,7 +5,9 @@
 #include <chrono>
 #include <ctime>
 #include <vector>
+#include <mutex>
 
+std::mutex cout_mutex;
 
 bool prime(int n) {
     //prints for testing
@@ -38,8 +40,12 @@ void timestamp() {
 
 void thread_function(int thread_id, int min, int max) { //to pass into thread
     for (int i = min;i < max+1;i++) {
-        timestamp();
-        std::cout << "Thread " << thread_id << ", Number: " << i << ", Result: " << (prime(i) ? "Prime" : "Not Prime") << std::endl;
+        {   
+			std::lock_guard<std::mutex> lock(cout_mutex); // Lock mutex for thread-safe output
+            timestamp(); //prints timestamp
+            std::cout << "Thread " << thread_id << ", Number: " << i << ", Result: " << (prime(i) ? "Prime" : "Not Prime") << std::endl;
+        }
+      
     }
 }
 
