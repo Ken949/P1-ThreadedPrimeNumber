@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="A1B1.cpp" />
+    <ClCompile Include="A2B1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="config.txt" />

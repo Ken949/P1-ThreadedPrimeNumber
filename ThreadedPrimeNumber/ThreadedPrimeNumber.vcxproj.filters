@@ -18,6 +18,9 @@
     <ClCompile Include="A1B1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="A2B1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="config.txt">
