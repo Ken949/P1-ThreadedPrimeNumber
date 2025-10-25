@@ -140,11 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="A1B2.cpp" />
-    <ClCompile Include="A2B2.cpp" />
+    <Text Include="config.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="config.txt" />
+    <ClCompile Include="A1B2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
