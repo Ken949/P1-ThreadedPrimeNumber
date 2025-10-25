@@ -7,7 +7,7 @@
 #include <vector>
 #include <mutex>
 
-std::mutex cout_mutex;
+std::mutex result_mutex;
 
 bool prime(int n) {
     //prints for testing
@@ -23,7 +23,7 @@ bool prime(int n) {
     return true;
 }
 
-void timestamp() {
+void timestamp(std::string& time) { //need reference to add timestamp to output
     auto now = std::chrono::system_clock::now(); 
     std::time_t now_time = std::chrono::system_clock::to_time_t(now);  // Convert to time_t
 
@@ -35,25 +35,30 @@ void timestamp() {
     // Remove Date
     std::string time_str(buf);
 
-    std::cout << "[Timestamp: " << time_str.substr(11, 8) << "] ";
+    //std::cout << "[Timestamp: " << time_str.substr(11, 8) << "] "; 
+    time += "[Timestamp: " + time_str.substr(11, 8) + "] ";  // Store timestamp in referenced output
+
 }
 
-void thread_function(int thread_id, int min, int max) { //to pass into thread
+void thread_function(int thread_id, int min, int max, std::vector<std::string>& output_list) { //to pass into thread, reference output vector to edit in main
     for (int i = min;i < max+1;i++) {
-        {   
-			std::lock_guard<std::mutex> lock(cout_mutex); // Lock mutex for thread-safe output
-            timestamp(); //prints timestamp
-            std::cout << "Thread " << thread_id << ", Number: " << i << ", Result: " << (prime(i) ? "Prime" : "Not Prime") << std::endl;
+        std::string output;
+        timestamp(output); //puts timestamp into output string
+        output += "Thread " + std::to_string(thread_id) + ", Number: " + std::to_string(i) + ", Result: " + (prime(i) ? "Prime" : "Not Prime");
+		
+        //mutex for accessing shared resource
+        {
+			std::lock_guard<std::mutex> lock(result_mutex); // Lock mutex for thread-safe output, will error if no mutex
+            output_list.push_back(output); //store output in referenced output vector
         }
-      
     }
 
     {
-        std::lock_guard<std::mutex> lock(cout_mutex); // Lock mutex for thread-safe output
+        std::lock_guard<std::mutex> lock(result_mutex); // Lock mutex for thread-safe output
         std::cout << "[Thread " << thread_id << " is done]" << std::endl;  // Notify when the thread finishes its task
     }
 }
-
+//Variation A2B1: Wait until all threads are done then print, Division of Search Range
 int main() {
     //reading config files
     std::ifstream config("config.txt");
@@ -87,6 +92,10 @@ int main() {
 
     //Thread Storage
     std::vector<std::thread> threads;
+
+    //Output Storage (Output after threads are done)
+    std::vector<std::string> results;
+
   
     //Thread Creation
     for (int i = 0; i < Config_Threads; i++) {
@@ -97,9 +106,10 @@ int main() {
             end = Max;
         }
 
-		std::cout << "Start: " << start << " End: " << end << std::endl;
+        //for checking
+		//std::cout << "Start: " << start << " End: " << end << std::endl;
 
-        threads.push_back(std::thread(thread_function, i + 1, start, end));
+        threads.push_back(std::thread(thread_function, i + 1, start, end, std::ref(results)));
 
         
     }
@@ -107,6 +117,15 @@ int main() {
     // Wait for all threads to finish
     for (auto& t : threads) {
         t.join(); 
+    }
+
+    std::cout << "All threads finished. Here are the results:\n";
+
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "Slept for " << 2 << " seconds." << std::endl;
+
+    for (const auto& line : results) {
+        std::cout << line << std::endl;  // Print each line of the output
     }
 
     return 0;

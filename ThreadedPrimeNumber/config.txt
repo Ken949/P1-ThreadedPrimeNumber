@@ -1,2 +1,3 @@
-numThreads=4
-maxNumber=100
+numThreads=256
+maxNumber=65536
+
