@@ -53,29 +53,77 @@ void thread_function(int thread_id, int min, int max) { //to pass into thread
 }
 
 int main() {
-    //reading config files
+    // Reading config file
     std::ifstream config("config.txt");
 
-	if (!config.is_open()) {
-		std::cerr << "Failed to open config file." << std::endl;
-		return 1;
-	}
+    if (!config.is_open()) {
+        std::cerr << "Failed to open config file." << std::endl;
+        return 1;
+    }
 
     int Config_Threads = 0;
     int Max = 0;
 
     std::string line;
+    bool numThreadsFound = false;
+    bool maxNumberFound = false;
 
     while (std::getline(config, line)) {
         size_t pos = line.find('='); // find the '=' character
         if (pos != std::string::npos) {
             std::string key = line.substr(0, pos);       // text before '='
-            std::string value = line.substr(pos + 1);   // text after '='
+            std::string value = line.substr(pos + 1);    // text after '='
 
-            if (key == "numThreads") Config_Threads = std::stoi(value);
-            else if (key == "maxNumber") Max = std::stoi(value);
+            if (key == "numThreads") {
+                try {
+                    Config_Threads = std::stoi(value);  // Attempt to convert to integer
+                    if (Config_Threads <= 0) {
+                        std::cerr << "Error: 'numThreads' must be a positive integer." << std::endl;
+                        return 1;
+                    }
+                    numThreadsFound = true;
+                }
+                catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: Invalid value for 'numThreads'. It must be an integer." << std::endl;
+                    return 1;
+                }
+                catch (const std::out_of_range& e) {
+                    std::cerr << "Error: 'numThreads' is out of range for an integer." << std::endl;
+                    return 1;
+                }
+            }
+            else if (key == "maxNumber") {
+                try {
+                    Max = std::stoi(value);  // Attempt to convert to integer
+                    if (Max <= 0) {
+                        std::cerr << "Error: 'maxNumber' must be a positive integer." << std::endl;
+                        return 1;
+                    }
+                    maxNumberFound = true;
+                }
+                catch (const std::invalid_argument& e) {
+                    std::cerr << "Error: Invalid value for 'maxNumber'. It must be an integer." << std::endl;
+                    return 1;
+                }
+                catch (const std::out_of_range& e) {
+                    std::cerr << "Error: 'maxNumber' is out of range for an integer." << std::endl;
+                    return 1;
+                }
+            }
         }
     }
+
+    // Check if both 'numThreads' and 'maxNumber' were found
+    if (!numThreadsFound) {
+        std::cerr << "Error: 'numThreads' key not found in the config file." << std::endl;
+        return 1;
+    }
+
+    if (!maxNumberFound) {
+        std::cerr << "Error: 'maxNumber' key not found in the config file." << std::endl;
+        return 1;
+    }
+
 
     //Threading Start
 	std::cout << "Starting " << Config_Threads << " threads to find prime numbers until " << Max << std::endl;
