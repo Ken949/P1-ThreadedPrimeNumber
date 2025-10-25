@@ -121,8 +121,8 @@ int main() {
 
     std::cout << "All threads finished. Here are the results:\n";
 
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    std::cout << "Slept for " << 2 << " seconds." << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << "Slept for " << 1 << " second." << std::endl;
 
     for (const auto& line : results) {
         std::cout << line << std::endl;  // Print each line of the output
