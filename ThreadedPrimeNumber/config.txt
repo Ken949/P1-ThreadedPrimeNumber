@@ -1,2 +1,2 @@
 numThreads=4
-maxNumber=1000
+maxNumber=100

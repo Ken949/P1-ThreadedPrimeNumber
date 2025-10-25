@@ -140,7 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ThreadedPrimeNumber.cpp" />
+    <ClCompile Include="A1B1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="config.txt" />
