@@ -127,10 +127,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="..\ThreadedPrimeNumber\config.txt" />
+    <ClCompile Include="A1B2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="A1B2.cpp" />
+    <Text Include="config.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

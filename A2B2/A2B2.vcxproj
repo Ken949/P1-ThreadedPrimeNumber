@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\ThreadedPrimeNumber\config.txt" />
+    <ClCompile Include="A2B2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="A2B2.cpp" />
+    <Text Include="config.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
